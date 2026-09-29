@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tạo QR Thanh Toán - Huy</title>
+    <!-- DNS prefetch & CDN connects for ultra-fast loading -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://img.vietqr.io">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="robots" content="noindex, nofollow"/>
+    <style>
+        :root {
+            --bg-gradient-1: #f2fbf6;
+            --bg-gradient-2: #e2f7ec;
+            --pastel-green-main: #34d399;
+            --pastel-green-dark: #059669;
+            --pastel-green-deep: #065f46;
+            --pastel-green-soft: #d1fae5;
+            --text-main: #1f2937;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.85);
+            --agri-red: #bb1525;
+            --agri-green: #047857;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #e6f9f0 30%, #d1fae5 65%, #cbf5df 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 20s ease infinite alternate;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .bg-animation-area {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none;
+            contain: strict;
+        }
+        
+        .glowing-orb {
+            position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.35;
+            will-change: transform;
+            animation: floatOrb 22s infinite ease-in-out alternate;
+        }
+        .orb-1 { width: 380px; height: 380px; background: #a7f3d0; top: -10%; left: -10%; }
+        .orb-2 { width: 440px; height: 440px; background: #6ee7b7; bottom: -15%; right: -10%; animation-delay: -6s; }
+        .orb-3 { width: 300px; height: 300px; background: #bbf7d0; top: 35%; left: 55%; animation-delay: -11s; }
+        
+        @keyframes floatOrb {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            100% { transform: translate3d(30px, 40px, 0) scale(1.08); }
+        }
+
+        .floating-shapes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; }
+        .floating-shapes li {
+            position: absolute; display: block; list-style: none;
+            width: 20px; height: 20px;
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.06);
+            animation: floatUp 25s linear infinite;
+            bottom: -150px; border-radius: 6px; backdrop-filter: blur(2px);
+            will-change: transform, opacity;
+        }
+        .floating-shapes li:nth-child(1) { left: 12%; width: 50px; height: 50px; animation-duration: 22s; }
+        .floating-shapes li:nth-child(2) { left: 28%; width: 36px; height: 36px; animation-delay: 2s; animation-duration: 25s; border-radius: 50%; }
+        .floating-shapes li:nth-child(3) { left: 50%; width: 68px; height: 68px; animation-delay: 4s; }
+        .floating-shapes li:nth-child(4) { left: 72%; width: 32px; height: 32px; animation-duration: 17s; }
+        .floating-shapes li:nth-child(5) { left: 88%; width: 46px; height: 46px; animation-delay: 3s; border-radius: 50%; }
+        
+        @keyframes floatUp {
+            0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.9; }
+            100% { transform: translate3d(0, -1150px, 0) rotate(540deg); opacity: 0; }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(16, 185, 129, 0.08);
+        }
+        
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(246,253,248,0.9));
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 24px -4px rgba(16, 185, 129, 0.1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            box-shadow: 0 16px 30px -5px rgba(16, 185, 129, 0.16), 0 8px 12px -6px rgba(16, 185, 129, 0.08);
+        }
+
+        .btn-gradient-green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .btn-gradient-green:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.38);
+            transform: translateY(-1px);
+        }
+        .btn-gradient-green:active {
+            transform: scale(0.98);
+        }
+
+        .amount-chip {
+            transition: all 0.18s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .amount-chip:hover {
+            transform: translateY(-1px);
+            border-color: #10b981;
+            background-color: #ecfdf5;
+            color: #065f46;
+        }
+        .amount-chip.active {
+            border-color: #059669;
+            background: #d1fae5;
+            color: #064e3b;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.18);
+        }
+
+        .qr-frame-pulse {
+            box-shadow: 0 14px 40px -6px rgba(16, 185, 129, 0.22), 0 0 0 1px rgba(16, 185, 129, 0.15);
+            animation: qrGlow 4s infinite alternate ease-in-out;
+        }
+        @keyframes qrGlow {
+            0% { box-shadow: 0 12px 35px -6px rgba(16, 185, 129, 0.2); }
+            100% { box-shadow: 0 18px 45px -4px rgba(5, 150, 105, 0.3); }
+        }
+
+        /* Auto-sizing QR Box that fills available screen smoothly */
+        .qr-adaptive-box {
+            width: 100%;
+            height: clamp(340px, 48vh, 560px);
+            max-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        @media (min-width: 1024px) {
+            .qr-adaptive-box {
+                height: clamp(380px, 55vh, 620px);
+            }
+        }
+
+        #toast-container {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .toast-msg {
+            background: #064e3b; color: white; padding: 11px 22px; border-radius: 9999px;
+            font-size: 13.5px; font-weight: 700; box-shadow: 0 12px 28px -4px rgba(6,78,59,0.4);
+            animation: slideUpFade 0.25s forwards, fadeOut 0.25s 2.5s forwards;
+            display: flex; align-items: center; gap: 8px;
+            white-space: nowrap;
+        }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        .modal-overlay {
+            background-color: rgba(6, 78, 59, 0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .hide { display: none !important; }
+    </style>
+</head>
+<body class="pb-16 text-emerald-950 text-sm md:text-base">
+
+    <!-- Glowing animated background -->
+    <div class="bg-animation-area">
+        <div class="glowing-orb orb-1"></div>
+        <div class="glowing-orb orb-2"></div>
+        <div class="glowing-orb orb-3"></div>
+        <ul class="floating-shapes">
+            <li></li><li></li><li></li><li></li><li></li>
+        </ul>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container"></div>
+
+    <div class="w-full max-w-6xl mx-auto px-3 sm:px-5 pt-3 md:pt-6 min-h-screen flex flex-col justify-between">
+
+        <!-- Top Navigation / Header -->
+        <header class="glass-panel p-3.5 md:p-4 rounded-3xl flex justify-between items-center mb-5 md:mb-7 shadow-sm border border-white">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 flex items-center justify-center shadow-md shadow-emerald-600/25 text-white cursor-pointer hover:rotate-6 transition-transform">
+                    <i class="fa-solid fa-qrcode text-xl md:text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base md:text-xl font-extrabold text-emerald-950 tracking-tight leading-tight flex items-center gap-2">
+                        Tạo QR VietQR
+                        <span class="bg-emerald-100 text-emerald-800 text-[10px] md:text-xs font-bold px-2.5 py-0.5 rounded-full border border-emerald-300">Agribank</span>
+                    </h1>
+                    <p class="text-[11px] md:text-xs text-emerald-700 font-bold">Thanh toán nhanh • Quét trực tiếp</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="resetAllFields()" class="w-10 h-10 rounded-xl bg-white/90 hover:bg-white text-emerald-700 border border-emerald-200 flex items-center justify-center shadow-sm active:scale-95 transition-transform" title="Làm mới thông tin">
+                    <i class="fa-solid fa-rotate-right text-sm"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content: Left Form, Right Responsive Centered QR Display -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start mb-8">
+
+            <!-- Left Column: Input Form (5 cols on large screen) -->
+            <section class="lg:col-span-5 space-y-4 md:space-y-5">
+
+                <!-- Beneficiary Card -->
+                <div class="glass-card rounded-[2rem] p-5 md:p-6 border border-white relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 opacity-10 text-emerald-800 pointer-events-none">
+                        <i class="fa-solid fa-building-columns text-8xl"></i>
+                    </div>
+
+                    <div class="flex items-center justify-between mb-3 pb-2.5 border-b border-emerald-100">
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-emerald-600"></i> Tài Khoản Thụ Hưởng
+                        </span>
+                        <span class="text-[11px] font-bold bg-emerald-100/80 text-emerald-800 px-2.5 py-0.5 rounded-md border border-emerald-200">
+                            Chính chủ
+                        </span>
+                    </div>
+
+                    <div class="space-y-3 relative z-10">
+                        <!-- Receiver Name -->
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-emerald-800/70 font-bold uppercase">Người thụ hưởng</span>
+                            <span class="text-sm md:text-base font-black text-emerald-950 tracking-wide" id="dispBeneficiaryName">Nguyễn Phạm Nhật Huy</span>
+                        </div>
+
+                        <!-- Bank Name -->
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-emerald-800/70 font-bold uppercase">Ngân hàng</span>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm"></span>
+                                <span class="text-sm font-bold text-emerald-900">Agribank</span>
+                            </div>
+                        </div>
+
+                        <!-- Bank Account Number with Quick Copy -->
+                        <div class="bg-gradient-to-r from-emerald-100/60 to-teal-50/70 p-3 rounded-2xl border border-emerald-200/80 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] text-emerald-700 uppercase font-bold tracking-wider">Số tài khoản</p>
+                                <p class="text-lg md:text-xl font-black text-emerald-900 tracking-wider" id="dispAccountNumber">7105205478044</p>
+                            </div>
+                            <button onclick="copyAccountInfo()" class="px-3 py-2 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-sm font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95" title="Sao chép số tài khoản">
+                                <i class="fa-regular fa-copy text-emerald-600"></i>
+                                <span>Sao chép</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Controls Card -->
+                <div class="glass-panel rounded-[2rem] p-5 md:p-6 space-y-4 border border-white">
+                    <h2 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 flex items-center gap-2">
+                        <i class="fa-solid fa-money-bill-wave text-emerald-600"></i> Nhập Thông Tin Chuyển
+                    </h2>
+
+                    <!-- Amount Input -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label for="amountInput" class="text-xs font-bold text-emerald-800/80 uppercase tracking-wide">
+                                Số tiền nhận (VNĐ)
+                            </label>
+                            <span id="amountInWords" class="text-[11px] font-bold text-emerald-700 truncate max-w-[200px]"></span>
+                        </div>
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="amountInput" 
+                                inputmode="numeric" 
+                                placeholder="0"
+                                class="w-full bg-white border border-emerald-200 text-emerald-950 font-black text-lg md:text-xl rounded-2xl pl-4 pr-14 py-3 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all placeholder:text-slate-400 placeholder:text-xs md:placeholder:text-sm placeholder:font-medium shadow-sm"
+                                oninput="handleAmountInput(this)"
+                            >
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-extrabold text-xs md:text-sm text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">VNĐ</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Amount Chips -->
+                    <div>
+                        <p class="text-[11px] font-bold text-emerald-800/70 uppercase tracking-wider mb-2">Chọn nhanh số tiền:</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" onclick="setQuickAmount(20000)" class="amount-chip py-2 px-1 text-center bg-white border border-emerald-100 rounded-xl text-xs font-bold text-emerald-900 shadow-sm" data-amount="20000">20.000đ</button>
+                            <button type="button" onclick="setQuickAmount(50000)" class="amount-chip py-2 px-1 text-center bg-white border border-emerald-100 rounded-xl text-xs font-bold text-emerald-900 shadow-sm" data-amount="50000">50.000đ</button>
+                            <button type="button" onclick="setQuickAmount(100000)" class="amount-chip py-2 px-1 text-center bg-white border border-emerald-100 rounded-xl text-xs font-bold text-emerald-900 shadow-sm" data-amount="100000">100.000đ</button>
+                            <button type="button" onclick="setQuickAmount(200000)" class="amount-chip py-2 px-1 text-center bg-white border border-emerald-100 rounded-xl text-xs font-bold text-emerald-900 shadow-sm" data-amount="200000">200.000đ</button>
+                            <button type="button" onclick="setQuickAmount(500000)" class="amount-chip py-2 px-1 text-center bg-white border border-emerald-100 rounded-xl text-xs font-bold text-emerald-900 shadow-sm" data-amount="500000">500.000đ</button>
+                            <button type="button" onclick="clearAmount()" class="amount-chip py-2 px-1 text-center bg-emerald-50/70 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-600 hover:text-red-500 shadow-sm">Tự nhập</button>
+                        </div>
+                    </div>
+
+                    <!-- Transfer Message Input -->
+                    <div class="pt-1">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label for="messageInput" class="text-xs font-bold text-emerald-800/80 uppercase tracking-wide">
+                                Nội dung chuyển
+                            </label>
+                            <span id="charCount" class="text-[10px] font-bold text-emerald-600">0/50</span>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            maxlength="50"
+                            placeholder="...."
+                            class="w-full bg-white border border-emerald-200 text-emerald-950 font-semibold text-sm md:text-base rounded-2xl px-4 py-3 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all placeholder:text-slate-400 shadow-sm"
+                            oninput="handleMessageInput(this)"
+                        >
+                    </div>
+
+                    <!-- Quick Message Chips -->
+                    <div class="flex flex-wrap gap-1.5 pt-0.5">
+                        <button type="button" onclick="setQuickMessage('Tien phong')" class="text-[11px] font-semibold bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg px-2.5 py-1 transition-colors">Tiền phòng</button>
+                        <button type="button" onclick="setQuickMessage('Tien an')" class="text-[11px] font-semibold bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg px-2.5 py-1 transition-colors">Tiền ăn</button>
+                        <button type="button" onclick="setQuickMessage('Tien cafe')" class="text-[11px] font-semibold bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg px-2.5 py-1 transition-colors">Tiền cà phê</button>
+                        <button type="button" onclick="setQuickMessage('Tra tien')" class="text-[11px] font-semibold bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg px-2.5 py-1 transition-colors">Trả tiền</button>
+                    </div>
+
+                    <!-- Template Selector -->
+                    <div class="pt-2 border-t border-emerald-100">
+                        <label class="text-xs font-bold text-emerald-800/80 uppercase tracking-wide block mb-2">
+                            Kiểu hiển thị
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onclick="setQrTemplate('compact2')" id="btnTemplateCompact" class="py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 border-emerald-500 bg-emerald-100 text-emerald-900 shadow-sm">
+                                <i class="fa-solid fa-id-card"></i> Khung kèm logo
+                            </button>
+                            <button type="button" onclick="setQrTemplate('qr_only')" id="btnTemplateQrOnly" class="py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 border-emerald-200 bg-white text-emerald-700 hover:border-emerald-300">
+                                <i class="fa-solid fa-qrcode"></i> Mã QR tối giản
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Auto-fitting Expanded QR Widget (7 cols on large screen) -->
+            <section class="lg:col-span-7 flex flex-col items-center w-full">
+                
+                <div class="w-full glass-card rounded-[2.5rem] p-5 sm:p-7 border border-white shadow-xl relative flex flex-col items-center qr-frame-pulse">
+                    
+                    <!-- Decorative Badge & Controls -->
+                    <div class="w-full flex items-center justify-between mb-3 md:mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                            <span class="text-xs md:text-sm font-black text-emerald-950 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-expand text-emerald-600"></i> Mã QR Thanh Toán Trực Tiếp
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="qrStatusBadge" class="text-[10px] md:text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border border-emerald-300 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i> Sẵn sàng
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Auto-fitting Large QR Container -->
+                    <div class="qr-adaptive-box bg-white rounded-3xl p-3 sm:p-5 border border-emerald-100 shadow-inner overflow-hidden group">
+                        
+                        <!-- Loading spinner on QR update -->
+                        <div id="qrLoadingSpinner" class="absolute inset-0 bg-white/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center transition-opacity duration-200 opacity-0 pointer-events-none">
+                            <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mb-3"></div>
+                            <span class="text-xs md:text-sm font-bold text-emerald-800">Đang đồng bộ mã QR...</span>
+                        </div>
+
+                        <!-- Live QR Image: Scales responsively with contain -->
+                        <img 
+                            id="liveQrImage" 
+                            src="" 
+                            alt="VietQR Agribank Nguyễn Phạm Nhật Huy"
+                            class="w-full h-full max-w-full max-h-full object-contain rounded-2xl select-none transition-all duration-300 transform group-hover:scale-[1.01]"
+                            crossorigin="anonymous"
+                            onload="onQrImageLoaded()"
+                            onerror="onQrImageError()"
+                        >
+                    </div>
+
+                    <!-- Live Summary Info Box -->
+                    <div class="w-full mt-4 bg-emerald-50/70 rounded-2xl p-3 sm:p-4 border border-emerald-200/80 space-y-1.5 text-xs sm:text-sm">
+                        <div class="flex justify-between items-center text-emerald-800/80 font-medium">
+                            <span>Số tiền chuyển:</span>
+                            <span class="text-base sm:text-lg font-black text-emerald-800" id="dispQrAmount">Tùy người chuyển</span>
+                        </div>
+                        <div class="flex justify-between items-center text-emerald-800/80 font-medium">
+                            <span>Nội dung CK:</span>
+                            <span class="font-bold text-emerald-950 truncate max-w-[240px] sm:max-w-[320px]" id="dispQrMessage">(Chưa có)</span>
+                        </div>
+                    </div>
+
+                    <!-- Primary Action Buttons: Share & Download -->
+                    <div class="w-full mt-4 sm:mt-5 space-y-2.5">
+                        
+                        <!-- Share QR Button: Native Web Share API with File Support -->
+                        <button 
+                            type="button" 
+                            id="btnShareQr" 
+                            onclick="shareQrCode()" 
+                            class="w-full btn-gradient-green py-3.5 sm:py-4 px-4 rounded-2xl font-black text-sm md:text-base flex items-center justify-center gap-2.5 shadow-lg active:scale-98 transition-transform"
+                        >
+                            <i class="fa-solid fa-share-nodes text-lg"></i>
+                            <span>Share QR</span>
+                        </button>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <!-- Download Button -->
+                            <button 
+                                type="button" 
+                                onclick="downloadQrCode()" 
+                                class="bg-white hover:bg-emerald-50 text-emerald-900 border border-emerald-300 py-3 px-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all"
+                            >
+                                <i class="fa-solid fa-download text-emerald-600"></i>
+                                <span>Tải QR</span>
+                            </button>
+
+                            <!-- Copy Link / Copy Image Button -->
+                            <button 
+                                type="button" 
+                                onclick="copyQrImageToClipboard()" 
+                                class="bg-white hover:bg-emerald-50 text-emerald-900 border border-emerald-300 py-3 px-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all"
+                            >
+                                <i class="fa-regular fa-copy text-emerald-600"></i>
+                                <span>Copy QR</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-emerald-700/80 font-medium mt-3.5 text-center">
+                        <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Quét nhanh trên tất cả app Ngân hàng (VCB, BIDV, VietinBank, Agribank...) & Ví Momo, ZaloPay
+                    </p>
+                </div>
+
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center py-4 border-t border-emerald-200/60 mt-auto">
+            <p class="text-xs font-bold text-emerald-800">
+                Tiện ích tạo QR Chuyển khoản • <span class="text-emerald-950 font-black">Nh4tHuy</span>
+            </p>
+          
+        </footer>
+
+    </div>
+
+    <!-- Fallback Share Modal (when browser does not support native file sharing) -->
+    <div id="fallbackShareModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
+        <div class="bg-white rounded-[2rem] w-full max-w-sm flex flex-col shadow-2xl p-6 border border-emerald-100 text-center animate-fadeIn">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
+                <i class="fa-solid fa-share-nodes"></i>
+            </div>
+            <h3 class="text-lg font-black text-emerald-950 mb-1">Chia Sẻ Ảnh QR</h3>
+            <p class="text-xs text-emerald-800/80 mb-5 leading-relaxed">
+                Trình duyệt của bạn không hỗ trợ mở trực tiếp menu chia sẻ tệp của hệ thống. Bạn có thể chọn cách thức bên dưới:
+            </p>
+
+            <div class="space-y-2.5 text-left mb-5">
+                <button onclick="downloadQrCode(); closeModal('fallbackShareModal');" class="w-full bg-emerald-50/60 hover:bg-emerald-100/60 p-3 rounded-xl border border-emerald-200 flex items-center gap-3 transition-colors">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-200/70 text-emerald-800 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-emerald-950 text-xs">Tải ảnh về máy</p>
+                        <p class="text-[10px] text-emerald-700">Lưu ảnh vào thư viện để gửi qua Zalo, Messenger</p>
+                    </div>
+                </button>
+
+                <button onclick="copyQrImageToClipboard(); closeModal('fallbackShareModal');" class="w-full bg-emerald-50/60 hover:bg-emerald-100/60 p-3 rounded-xl border border-emerald-200 flex items-center gap-3 transition-colors">
+                    <div class="w-9 h-9 rounded-lg bg-teal-200/70 text-teal-800 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                        <i class="fa-regular fa-copy"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-emerald-950 text-xs">Sao chép ảnh vào Clipboard</p>
+                        <p class="text-[10px] text-emerald-700">Dán trực tiếp (Ctrl+V) vào ô chat</p>
+                    </div>
+                </button>
+
+                <button onclick="copyDirectQrLink(); closeModal('fallbackShareModal');" class="w-full bg-emerald-50/60 hover:bg-emerald-100/60 p-3 rounded-xl border border-emerald-200 flex items-center gap-3 transition-colors">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-emerald-950 text-xs">Sao chép liên kết ảnh QR</p>
+                        <p class="text-[10px] text-emerald-700">Gửi link ảnh cho người chuyển tiền</p>
+                    </div>
+                </button>
+            </div>
+
+            <button onclick="closeModal('fallbackShareModal')" class="w-full bg-emerald-100/80 text-emerald-800 font-bold py-2.5 rounded-xl hover:bg-emerald-200 transition-colors text-xs">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- Application Logic Script -->
+    <script>
+        // Beneficiary Constants
+        const BANK_INFO = {
+            bin: "970405", // Agribank VietQR BIN
+            name: "Agribank",
+            accountNumber: "7105205478044",
+            accountHolder: "NGUYEN PHAM NHAT HUY",
+            displayHolder: "Nguyễn Phạm Nhật Huy"
+        };
+
+        // App state
+        let state = {
+            rawAmount: 0,
+            message: "",
+            template: "compact2", // "compact2" or "qr_only"
+            currentQrUrl: "",
+            isGenerating: false
+        };
+
+        let debounceTimer = null;
+
+        // Number formatter
+        const moneyFormatter = new Intl.NumberFormat('vi-VN');
+
+        function formatCurrency(num) {
+            if (!num || isNaN(num)) return "0";
+            return moneyFormatter.format(Math.round(num));
+        }
+
+        // Convert number to approximate text in Vietnamese for clarity
+        function numberToWordsVietnamese(n) {
+            if (!n || n <= 0) return "";
+            if (n >= 1000000000) return `~ ${(n / 1000000000).toFixed(2).replace('.00', '')} tỷ VNĐ`;
+            if (n >= 1000000) return `~ ${(n / 1000000).toFixed(2).replace('.00', '')} triệu VNĐ`;
+            if (n >= 1000) return `~ ${(n / 1000).toFixed(0)} nghìn VNĐ`;
+            return `${n} VNĐ`;
+        }
+
+        // Remove Vietnamese accents to ensure VietQR compatibility across all banking apps
+        function removeAccents(str) {
+            if (!str) return "";
+            return str
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                .replace(/[^a-zA-Z0-9 ]/g, '')
+                .trim();
+        }
+
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.innerHTML = (isError ? '<i class="fa-solid fa-triangle-exclamation text-red-400"></i>' : '<i class="fa-solid fa-circle-check text-emerald-400"></i>') + `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { 
+                if (container.contains(toast)) container.removeChild(toast); 
+            }, 2800);
+        }
+
+        function showModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hide');
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hide');
+        }
+
+        // Close modal on click outside
+        window.onclick = function(e) {
+            if (e.target.id === 'fallbackShareModal') {
+                closeModal('fallbackShareModal');
+            }
+        };
+
+        function buildVietQrUrl() {
+            // URL pattern: https://img.vietqr.io/image/{BIN}-{STK}-{TEMPLATE}.png?amount={AMOUNT}&addInfo={ADDINFO}&accountName={NAME}
+            const template = state.template || "compact2";
+            let url = `https://img.vietqr.io/image/${BANK_INFO.bin}-${BANK_INFO.accountNumber}-${template}.png`;
+            
+            const params = [];
+            if (state.rawAmount > 0) {
+                params.push(`amount=${encodeURIComponent(state.rawAmount)}`);
+            }
+            if (state.message.trim()) {
+                const sanitizedMsg = removeAccents(state.message);
+                params.push(`addInfo=${encodeURIComponent(sanitizedMsg)}`);
+            }
+            params.push(`accountName=${encodeURIComponent(BANK_INFO.accountHolder)}`);
+
+            if (params.length > 0) {
+                url += `?${params.join('&')}`;
+            }
+            return url;
+        }
+
+        function refreshQrCode(immediate = false) {
+            if (debounceTimer) clearTimeout(debounceTimer);
+
+            const update = () => {
+                const newUrl = buildVietQrUrl();
+                state.currentQrUrl = newUrl;
+                
+                // Show loading indicator
+                const spinner = document.getElementById('qrLoadingSpinner');
+                if (spinner) spinner.classList.remove('opacity-0', 'pointer-events-none');
+
+                const liveImg = document.getElementById('liveQrImage');
+                if (liveImg) {
+                    liveImg.src = newUrl;
+                }
+
+                // Update summary texts
+                const dispAmt = document.getElementById('dispQrAmount');
+                const dispMsg = document.getElementById('dispQrMessage');
+                if (dispAmt) {
+                    dispAmt.innerText = state.rawAmount > 0 ? `${formatCurrency(state.rawAmount)} VNĐ` : "Tùy người chuyển";
+                }
+                if (dispMsg) {
+                    dispMsg.innerText = state.message.trim() ? state.message : "(Không ghi nội dung)";
+                }
+            };
+
+            if (immediate) {
+                update();
+            } else {
+                debounceTimer = setTimeout(update, 220);
+            }
+        }
+
+        function onQrImageLoaded() {
+            const spinner = document.getElementById('qrLoadingSpinner');
+            if (spinner) spinner.classList.add('opacity-0', 'pointer-events-none');
+            
+            const badge = document.getElementById('qrStatusBadge');
+            if (badge) {
+                badge.innerHTML = `<i class="fa-solid fa-check text-emerald-500"></i> Đã cập nhật`;
+            }
+        }
+
+        function onQrImageError() {
+            const spinner = document.getElementById('qrLoadingSpinner');
+            if (spinner) spinner.classList.add('opacity-0', 'pointer-events-none');
+            showToast("Không thể tải mã QR, vui lòng kiểm tra kết nối mạng!", true);
+        }
+
+        function handleAmountInput(input) {
+            // Strip out non-digit characters
+            const rawValue = input.value.replace(/\D/g, '');
+            const numericValue = parseInt(rawValue, 10) || 0;
+            
+            state.rawAmount = numericValue;
+            
+            // Format input display with thousand separators
+            if (numericValue > 0) {
+                input.value = formatCurrency(numericValue);
+                document.getElementById('amountInWords').innerText = numberToWordsVietnamese(numericValue);
+            } else {
+                input.value = '';
+                document.getElementById('amountInWords').innerText = '';
+            }
+
+            // Sync quick chips
+            syncQuickAmountChips(numericValue);
+            refreshQrCode(false);
+        }
+
+        function setQuickAmount(amount) {
+            state.rawAmount = amount;
+            const input = document.getElementById('amountInput');
+            if (input) {
+                input.value = formatCurrency(amount);
+            }
+            document.getElementById('amountInWords').innerText = numberToWordsVietnamese(amount);
+            syncQuickAmountChips(amount);
+            refreshQrCode(true);
+            showToast(`Đã chọn ${formatCurrency(amount)}đ`);
+        }
+
+        function clearAmount() {
+            state.rawAmount = 0;
+            const input = document.getElementById('amountInput');
+            if (input) {
+                input.value = '';
+                input.focus();
+            }
+            document.getElementById('amountInWords').innerText = '';
+            syncQuickAmountChips(0);
+            refreshQrCode(true);
+        }
+
+        function syncQuickAmountChips(selectedAmount) {
+            const chips = document.querySelectorAll('.amount-chip');
+            chips.forEach(chip => {
+                const amt = parseInt(chip.getAttribute('data-amount'), 10);
+                if (amt === selectedAmount) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+        }
+
+        function handleMessageInput(input) {
+            state.message = input.value;
+            const counter = document.getElementById('charCount');
+            if (counter) {
+                counter.innerText = `${input.value.length}/50`;
+            }
+            refreshQrCode(false);
+        }
+
+        function setQuickMessage(msg) {
+            const input = document.getElementById('messageInput');
+            if (input) {
+                input.value = msg;
+                handleMessageInput(input);
+            }
+            showToast(`Đã điền nội dung: "${msg}"`);
+        }
+
+        function setQrTemplate(tpl) {
+            state.template = tpl;
+            const btnCompact = document.getElementById('btnTemplateCompact');
+            const btnQrOnly = document.getElementById('btnTemplateQrOnly');
+
+            if (tpl === 'compact2') {
+                btnCompact.className = 'py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 border-emerald-500 bg-emerald-100 text-emerald-900 shadow-sm';
+                btnQrOnly.className = 'py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 border-emerald-200 bg-white text-emerald-700 hover:border-emerald-300';
+            } else {
+                btnQrOnly.className = 'py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 border-emerald-500 bg-emerald-100 text-emerald-900 shadow-sm';
+                btnCompact.className = 'py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 border-emerald-200 bg-white text-emerald-700 hover:border-emerald-300';
+            }
+            refreshQrCode(true);
+        }
+
+        function resetAllFields() {
+            clearAmount();
+            const msgInput = document.getElementById('messageInput');
+            if (msgInput) {
+                msgInput.value = '';
+                handleMessageInput(msgInput);
+            }
+            setQrTemplate('compact2');
+            showToast("Đã làm mới thông tin!");
+        }
+
+        // Copy Account Info
+        function copyAccountInfo() {
+            copyTextFallback(BANK_INFO.accountNumber, `Đã chép STK Agribank: ${BANK_INFO.accountNumber}`);
+        }
+
+        // Generic text copy
+        function copyTextFallback(text, successMsg = "Đã sao chép!") {
+            if (!text) return;
+            const textStr = String(text);
+            const fallback = () => {
+                const temp = document.createElement("textarea");
+                temp.value = textStr;
+                temp.style.position = "fixed";
+                temp.style.left = "-9999px";
+                document.body.appendChild(temp);
+                temp.focus();
+                temp.select();
+                try {
+                    document.execCommand("copy");
+                    showToast(successMsg);
+                } catch(e) {
+                    showToast("Không thể sao chép!", true);
+                }
+                document.body.removeChild(temp);
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textStr)
+                    .then(() => showToast(successMsg))
+                    .catch(fallback);
+            } else {
+                fallback();
+            }
+        }
+
+        function copyDirectQrLink() {
+            copyTextFallback(state.currentQrUrl, "Đã sao chép liên kết ảnh QR!");
+        }
+
+        // Fetch image as blob for sharing or copying
+        async function fetchQrBlob() {
+            const url = state.currentQrUrl || buildVietQrUrl();
+            const response = await fetch(url, { mode: 'cors' });
+            if (!response.ok) throw new Error("Fetch failed");
+            return await response.blob();
+        }
+
+        // Core Share Function: Native Web Share API with File
+        async function shareQrCode() {
+            const btn = document.getElementById('btnShareQr');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Đang chuẩn bị ảnh chia sẻ...</span>`;
+            btn.disabled = true;
+
+            try {
+                const blob = await fetchQrBlob();
+                const fileName = `VietQR_Agribank_NhatHuy_${state.rawAmount || '0'}d.png`;
+                const file = new File([blob], fileName, { type: 'image/png' });
+
+                const shareText = `Chuyển khoản Agribank: Nguyễn Phạm Nhật Huy - STK 7105205478044${state.rawAmount > 0 ? ` - Số tiền: ${formatCurrency(state.rawAmount)} VNĐ` : ''}${state.message.trim() ? ` - Nội dung: ${state.message}` : ''}`;
+
+                // Check if browser supports sharing files
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        title: "Mã QR Chuyển Khoản Agribank",
+                        text: shareText,
+                        files: [file]
+                    });
+                    showToast("Chia sẻ ảnh QR thành công!");
+                } else if (navigator.share) {
+                    // Fallback to text/url share if files not supported by share API
+                    await navigator.share({
+                        title: "Mã QR Chuyển Khoản Agribank",
+                        text: shareText,
+                        url: state.currentQrUrl
+                    });
+                    showToast("Đã mở menu chia sẻ!");
+                } else {
+                    // Show fallback modal
+                    showModal('fallbackShareModal');
+                }
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.warn("Share error / fallback:", err);
+                    showModal('fallbackShareModal');
+                }
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        }
+
+        // Download QR image
+        async function downloadQrCode() {
+            try {
+                showToast("Đang tải ảnh mã QR...");
+                const blob = await fetchQrBlob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = `VietQR_Agribank_NhatHuy_${state.rawAmount || 'tuychuyen'}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(blobUrl);
+                showToast("Đã tải ảnh QR về máy!");
+            } catch (e) {
+                // Direct link fallback
+                window.open(state.currentQrUrl, '_blank');
+                showToast("Đã mở ảnh trong tab mới!");
+            }
+        }
+
+        // Copy Image directly to Clipboard (for pasting into Facebook Messenger, Zalo PC, etc.)
+        async function copyQrImageToClipboard() {
+            try {
+                if (!navigator.clipboard || !window.ClipboardItem) {
+                    showToast("Trình duyệt chưa hỗ trợ sao chép ảnh trực tiếp, hãy dùng nút Tải về!", true);
+                    return;
+                }
+                showToast("Đang sao chép ảnh...");
+                const blob = await fetchQrBlob();
+                const item = new ClipboardItem({ "image/png": blob });
+                await navigator.clipboard.write([item]);
+                showToast("Đã sao chép ảnh QR! Bạn có thể dán (Ctrl+V) vào ô chat.");
+            } catch (err) {
+                console.warn("Clipboard write failed:", err);
+                copyDirectQrLink();
+            }
+        }
+
+        // Initialize App on load
+        window.addEventListener('DOMContentLoaded', () => {
+            refreshQrCode(true);
+        });
+    </script>
+</body>
+</html>

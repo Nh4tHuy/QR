@@ -379,7 +379,7 @@
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
                             <span class="text-xs md:text-sm font-black text-emerald-950 uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-expand text-emerald-600"></i> Mã QR Thanh Toán Trực Tiếp
+                                Mã QR Thanh Toán Trực Tiếp
                             </span>
                         </div>
                         <div class="flex items-center gap-2">
@@ -460,7 +460,7 @@
                     </div>
 
                     <p class="text-[11px] text-emerald-700/80 font-medium mt-3.5 text-center">
-                        <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Quét nhanh trên tất cả app Ngân hàng (VCB, BIDV, VietinBank, Agribank...) & Ví Momo, ZaloPay
+                        <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Quét nhanh trên tất cả app Ngân hàng & Ví Momo, ZaloPay
                     </p>
                 </div>
 
@@ -835,12 +835,12 @@
                 const fileName = `VietQR_Agribank_NhatHuy_${state.rawAmount || '0'}d.png`;
                 const file = new File([blob], fileName, { type: 'image/png' });
 
-                const shareText = `Chuyển khoản Agribank: Nguyễn Phạm Nhật Huy - STK 7105205478044${state.rawAmount > 0 ? ` - Số tiền: ${formatCurrency(state.rawAmount)} VNĐ` : ''}${state.message.trim() ? ` - Nội dung: ${state.message}` : ''}`;
+                const shareText = `STK: 7105205478044${state.rawAmount > 0 ? \n `  Số tiền: ${formatCurrency(state.rawAmount)} VNĐ` : ''}${state.message.trim() ? \n ` Nội dung: ${state.message}` : ''}`;
 
                 // Check if browser supports sharing files
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({
-                        title: "Mã QR Chuyển Khoản Agribank",
+                        title: "Mã QR Chuyển Khoản",
                         text: shareText,
                         files: [file]
                     });

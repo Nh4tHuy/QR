@@ -834,8 +834,11 @@
                 const blob = await fetchQrBlob();
                 const fileName = `VietQR_Agribank_NhatHuy_${state.rawAmount || '0'}d.png`;
                 const file = new File([blob], fileName, { type: 'image/png' });
-
-                const shareText = `STK: 7105205478044${state.rawAmount > 0 ? \n `  Số tiền: ${formatCurrency(state.rawAmount)} VNĐ` : ''}${state.message.trim() ? \n ` Nội dung: ${state.message}` : ''}`;
+const shareText = `Chuyển khoản Agribank:
+Nguyễn Phạm Nhật Huy
+STK: 7105205478044
+${state.rawAmount > 0 ? `Số tiền: ${formatCurrency(state.rawAmount)} VNĐ` : ''}
+${state.message.trim() ? `Nội dung: ${state.message}` : ''}`;
 
                 // Check if browser supports sharing files
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
